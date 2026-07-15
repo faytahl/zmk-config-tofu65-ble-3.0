@@ -149,36 +149,7 @@ void led_process_thread(void) {
         static uint16_t led_timer_steps = 0;
         led_timer_steps++;
 
-        if (indicator_state.connection > 0) {
-            static uint8_t profile_color_bits[3]= {0b011, 0b110, 0b101};
-            if (indicator_state.active_device >= 3) {
-                return;
-            }
-
-            if ((led_timer_steps & 0xf) == 0xf) { // every 16*20 = 320ms
-                indicator_state.flash_times--;
-                uint8_t color_bits = profile_color_bits[indicator_state.active_device];
-                switch ((led_timer_steps >> 4) & 0x3) {
-                    case 0:
-                        set_indicator_color(0);
-                        break;
-                    case 1:
-                        set_indicator_color(color_bits);
-                        break;
-                    case 2:
-                        if (indicator_state.connection != 2) set_indicator_color(0);
-                        break;
-                    case 3:
-                        if (indicator_state.connection != 2) {
-                            bt_addr_le_t *addr = zmk_ble_active_profile_addr();
-                            if ( bt_addr_le_eq(addr, BT_ADDR_LE_ANY) ) set_indicator_color(0b001); //red color
-                            else set_indicator_color(0b100); //blue color
-                        }
-                        break;
-                }
-                if (indicator_state.flash_times == 0) indicator_state.connection = 0;
-            }
-        } else if (indicator_state.battery < 10) {
+        if (indicator_state.battery < 10) {
             if ((led_timer_steps & 0x1f) == 0xf) set_indicator_color(0b001);
             else if ((led_timer_steps & 0x1f) == 0x1f) set_indicator_color(0);
         } else {
