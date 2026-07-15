@@ -182,11 +182,7 @@ void led_process_thread(void) {
             if ((led_timer_steps & 0x1f) == 0xf) set_indicator_color(0b001);
             else if ((led_timer_steps & 0x1f) == 0x1f) set_indicator_color(0);
         } else {
-            if (indicator_state.keylock & CAPSLOCK_BIT) {
-                set_indicator_color(0b101);
-            } else {
-                set_indicator_color(0);
-            }
+            set_indicator_color(0);
         }
     }
 }
